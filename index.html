@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NASTA IGRA</title>
+    <script src="../../anime.js"></script>
+    <style>
+        #vnesuvanja > div input {
+            width: 100px;
+            height: 100px;
+            font-size: 60px;
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+<button id="igraj">IGRAJ</button>
+<div id="vnesuvanja">
+
+</div>
+
+<script>
+
+    let nth = 1;
+    let brojka = [];
+    let niza = [1,2,3,4,5,6,7,8,9];
+    startGame();
+
+    document.getElementById('igraj').addEventListener('click',()=>{
+        check();
+    })
+
+    function startGame() {
+        for (let i = 8; i >= 0; i--) {
+            let ranI = getRandomInt(0,i);
+            let tmp = niza[i];
+            niza[i] = niza[ranI];
+            niza[ranI] = tmp;
+        }
+        let div = document.createElement('div');
+        document.querySelector(`#vnesuvanja`).appendChild(div);
+
+        brojka = niza.slice(0,4);
+        console.log(brojka);
+
+        for (let i = 0; i < 4; i++) {
+            document.querySelector(`#vnesuvanja > div:nth-child(1)`).innerHTML+="<input>";
+        }
+    }
+    function check(){
+        let tryBroj = [];
+        let flag = true;
+        document.querySelectorAll(`#vnesuvanja > div:nth-child(${nth}) input`).forEach((input,i)=>{
+            tryBroj[i] = parseInt(input.value);
+            if(tryBroj[i]!==brojka[i]){
+                flag = false;
+            }
+        })
+
+        if(flag){
+            document.querySelectorAll(`#vnesuvanja > div:nth-child(${nth}) input`).forEach((input)=>{
+                anime({
+                    targets: input,
+                    duration: 2000,
+                    backgroundColor: 'rgb(0,70,0)'
+                })
+            })
+            document.querySelector('body').style.background = 'url("bea.jpg")';
+            document.querySelectorAll('input').forEach((input)=>{
+                input.disabled = true
+            })
+            return;
+        }
+
+
+        document.querySelectorAll(`#vnesuvanja > div:nth-child(${nth}) input`).forEach((input,index)=>{
+            if(parseInt(input.value)===brojka[index])
+            {
+                anime({
+                    targets: input,
+                    duration: 2000,
+                    backgroundColor: 'rgb(93,199,93)'
+                })
+            }else{
+                if(brojka.includes(parseInt(input.value))){
+                    anime({
+                        targets: input,
+                        duration: 2000,
+                        backgroundColor: 'rgb(250,238,0)'
+                    })
+                }
+            }
+        })
+        nth++
+        const newDiv = document.createElement('div');
+        for (let i = 0; i < 4; i++) {
+            newDiv.innerHTML+="<input>"
+        }
+        document.querySelector("#vnesuvanja").appendChild(newDiv);
+    }
+
+    function getRandomInt(min, max) {
+        const minCeiled = Math.ceil(min);
+        const maxFloored = Math.floor(max);
+        return Math.floor(Math.random() * (maxFloored - minCeiled) + minCeiled); // The maximum is exclusive and the minimum is inclusive
+    }
+</script>
+</body>
+</html>
