@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>NASTA IGRA</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script> 
+    <title>IGRAA</title>
+    <script src="../../anime.js"></script>
     <style>
         #vnesuvanja > div input {
             width: 100px;
@@ -11,99 +11,97 @@
             font-size: 60px;
             text-align: center;
         }
-
+        p{
+            font-size: 20px;
+            font-family: Arial,sans-serif;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
-<button id="igraj">IGRAJ</button>
+<button id="check">Check</button>
 <div id="vnesuvanja">
 
 </div>
 
 <script>
-
+    let cifri = [1,2,3,4,5,6,7,8,9];
     let nth = 1;
-    let brojka = [];
-    let niza = [1,2,3,4,5,6,7,8,9];
+    let broj = [];
     startGame();
-
-    document.getElementById('igraj').addEventListener('click',()=>{
+    document.getElementById('check').addEventListener('click', () => {
         check();
     })
-
+    function getRandomInt(min, max) {
+        const minCeiled = Math.ceil(min);
+        const maxFloored = Math.floor(max);
+        return Math.floor(Math.random() * (maxFloored - minCeiled) + minCeiled); // The maximum is exclusive and the minimum is inclusive
+    }
     function startGame() {
-        for (let i = 8; i >= 0; i--) {
-            let ranI = getRandomInt(0,i);
-            let tmp = niza[i];
-            niza[i] = niza[ranI];
-            niza[ranI] = tmp;
-        }
         let div = document.createElement('div');
+        for (let i = 8; i >= 0; i--) {
+            let ranIdx = getRandomInt(0,i);
+            let tmp = cifri[i];
+            cifri[i] = cifri[ranIdx];
+            cifri[ranIdx] = tmp;
+        }
+        broj = cifri.slice(0,4);
+        console.log(broj);
         document.querySelector(`#vnesuvanja`).appendChild(div);
-
-        brojka = niza.slice(0,4);
-        console.log(brojka);
-
         for (let i = 0; i < 4; i++) {
-            document.querySelector(`#vnesuvanja > div:nth-child(1)`).innerHTML+="<input>";
+            document.querySelector(`#vnesuvanja > div:nth-of-type(1)`).innerHTML+="<input>";
         }
     }
     function check(){
-        let tryBroj = [];
-        let flag = true;
-        document.querySelectorAll(`#vnesuvanja > div:nth-child(${nth}) input`).forEach((input,i)=>{
-            tryBroj[i] = parseInt(input.value);
-            if(tryBroj[i]!==brojka[i]){
-                flag = false;
+        let trybroj = [];
+        let tocni = 0;
+        let naTocnoMesto = 0;
+        document.querySelectorAll(`#vnesuvanja > div:nth-of-type(${nth}) input`).forEach((input)=>{
+            trybroj.push(input.value);
+        })
+        let isti = true;
+        broj.forEach((broj,index)=>{
+            if(broj!=trybroj[index]){
+                isti=false;
             }
         })
-
-        if(flag){
-            document.querySelectorAll(`#vnesuvanja > div:nth-child(${nth}) input`).forEach((input)=>{
+        if(isti){
+            document.querySelector('body').style.background = 'url("bea.jpg")';
+            document.querySelectorAll(`#vnesuvanja > div:nth-of-type(${nth}) input`).forEach((input)=>{
                 anime({
                     targets: input,
                     duration: 2000,
-                    backgroundColor: 'rgb(0,70,0)'
+                    backgroundColor: 'rgb(0, 128, 0)',
+                    easing: 'linear'
                 })
-            })
-            document.querySelector('body').style.background = 'url("bea.jpg")';
-            document.querySelectorAll('input').forEach((input)=>{
-                input.disabled = true
             })
             return;
         }
-
-
-        document.querySelectorAll(`#vnesuvanja > div:nth-child(${nth}) input`).forEach((input,index)=>{
-            if(parseInt(input.value)===brojka[index])
-            {
-                anime({
-                    targets: input,
-                    duration: 2000,
-                    backgroundColor: 'rgb(93,199,93)'
-                })
-            }else{
-                if(brojka.includes(parseInt(input.value))){
-                    anime({
-                        targets: input,
-                        duration: 2000,
-                        backgroundColor: 'rgb(250,238,0)'
-                    })
+        document.querySelectorAll(`#vnesuvanja > div:nth-of-type(${nth}) input`).forEach((input,index)=>{
+            if(input.value==broj[index]){
+                naTocnoMesto++;
+                tocni++;
+            }
+            else{
+                if(broj.includes(parseInt(input.value))){
+                    tocni++;
                 }
             }
         })
         nth++
         const newDiv = document.createElement('div');
+        const newP = document.createElement('p');
+        newP.style.border = '1px solid black'
+        newP.style.width = '430px'
+        newP.style.textAlign = 'center'
+        newP.style.paddingTop = '5px'
+        newP.style.paddingBottom = '5px'
+        newP.innerHTML = `Tocni: ${tocni} Na tocno mesto: ${naTocnoMesto}`
         for (let i = 0; i < 4; i++) {
             newDiv.innerHTML+="<input>"
         }
+        document.querySelector("#vnesuvanja").appendChild(newP);
         document.querySelector("#vnesuvanja").appendChild(newDiv);
-    }
-
-    function getRandomInt(min, max) {
-        const minCeiled = Math.ceil(min);
-        const maxFloored = Math.floor(max);
-        return Math.floor(Math.random() * (maxFloored - minCeiled) + minCeiled); // The maximum is exclusive and the minimum is inclusive
     }
 </script>
 </body>
