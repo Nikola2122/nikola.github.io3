@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>IGRAA</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
     <style>
         #vnesuvanja > div input {
             width: 100px;
@@ -11,41 +11,42 @@
             font-size: 60px;
             text-align: center;
         }
-        p{
+        html{
             font-size: 20px;
             font-family: Arial,sans-serif;
             font-weight: bold;
         }
+        #check{
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
+<div id="mojBroj">
+    <input placeholder="What's on your mind?" id="brojot">
+    <button onclick="startGame();">Start Game</button>
+</div>
+
 <button id="check">Check</button>
 <div id="vnesuvanja">
 
 </div>
 
 <script>
-    let cifri = [1,2,3,4,5,6,7,8,9];
+ 
     let nth = 1;
     let broj = [];
-    startGame();
     document.getElementById('check').addEventListener('click', () => {
         check();
     })
-    function getRandomInt(min, max) {
-        const minCeiled = Math.ceil(min);
-        const maxFloored = Math.floor(max);
-        return Math.floor(Math.random() * (maxFloored - minCeiled) + minCeiled); // The maximum is exclusive and the minimum is inclusive
-    }
     function startGame() {
+        document.getElementById('mojBroj').style.display = 'none'
+
         let div = document.createElement('div');
-        for (let i = 8; i >= 0; i--) {
-            let ranIdx = getRandomInt(0,i);
-            let tmp = cifri[i];
-            cifri[i] = cifri[ranIdx];
-            cifri[ranIdx] = tmp;
+        let input = document.getElementById('brojot').value;
+        for (let i = 0; i < input.length; i++) {
+            broj[i] = parseInt(input.charAt(i));
         }
-        broj = cifri.slice(0,4);
         console.log(broj);
         document.querySelector(`#vnesuvanja`).appendChild(div);
         for (let i = 0; i < 4; i++) {
